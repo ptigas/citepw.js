@@ -25,6 +25,7 @@
   ],
   "dependencies": {
     "citeproc-js": "~1.0.9",
-    "zotero-bibtex-parse": "https://github.com/apcshields/zotero-bibtex-parse.git#~1.2.0"
+    "zotero-bibtex-parse": "https://github.com/apcshields/zotero-bibtex-parse.git#~1.2.0",
+    "xmldom": "~0.1.16"
   }
 }
