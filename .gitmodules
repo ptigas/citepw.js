@@ -1,0 +1,6 @@
+[submodule "zotero-bibtex"]
+	path = zotero-bibtex
+	url = https://github.com/apcshields/zotero-bibtex-parse.git
+[submodule "csl-styles"]
+	path = csl-styles
+	url = https://github.com/zotero/bundled-styles.git
