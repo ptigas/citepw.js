@@ -1,0 +1,30 @@
+{
+  "name": "citepw.js",
+  "main": "citepw.js",
+  "version": "0.0.1",
+  "authors": [
+    "Panagiotis Tigas <ptigas@gmail.com>"
+  ],
+  "description": "Bibtex citations in the browser",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "bibtex",
+    "csl",
+    "citeproc"
+  ],
+  "license": "MIT",
+  "homepage": "http://ptigas.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "citeproc-js": "~1.0.9",
+    "zotero-bibtex-parse": "https://github.com/apcshields/zotero-bibtex-parse.git#~1.2.0"
+  }
+}
