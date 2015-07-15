@@ -1,6 +1,6 @@
 # citepw.js
 
-Bibtex + HTML = <3
+Bibtex + HTML = :heart:
 
 # How to use
 
