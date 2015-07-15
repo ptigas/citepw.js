@@ -1,28 +1,16 @@
-# `citeproc-js` Demo Page
+# `citepw.js`
 
-The code in this folder can be used to spin up a local `citeproc-js`
-demo page.  It is mainly intended as a sample of running code for
-developers working with the processor.
+Bibtex + HTML = <3
 
-The demo.html page must be served from an HTTP server.  (Because it uses AJAX
-requests, it won't work if you open it in your browser from the filesystem.)
-So, either put this citeproc-js repository in a directory served by, for example,
-Apache, or you can use Node.js with the included tiny server script,
-node-server.js.
+# How to use
 
-To start the server, clone this repo to your local machine, open a terminal,
-enter this `./demo` subdirectory, and run the following command:
+Add this to include your bibliography
+`<script type="application/bibtex" data-target="bibliography" src="bibliography.bib">`
 
-    node ./node-server.js
+The target is a div that holds the citations. For example, that's how to include bibliography with `ieee` format.
+`<div class="bibliography" data-csl="ieee"></div>`
 
-Point a browser at the address reported by the server, and the
-demo page should appear.
+To invoke the citations processor, include this
+`<script type="text/javascript" src="citepw.js"></script>`
 
-See the demo.js file for more information about how it works.
-
-----
-Hope this helps. If you run into any snags, feel free to give me a shout.
-
-Frank Bennett
-Nagoya
-Japan
+Boom!
