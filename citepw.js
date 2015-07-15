@@ -70,8 +70,8 @@ var start = new Date().getTime();
 
     // This runs at document ready, and renders the bibliography
     var renderBib = function(callback) {
-        loadScript('xmldom.js', function() {
-            loadScript('citeproc.js', function() {
+        loadScript('bower_components/citeproc-js/xmldom.min.js', function() {
+            loadScript('bower_components/citeproc-js/citeproc.min.js', function() {
             
                 // Instantiate and return the engine
                 //console.log(citations);
@@ -84,21 +84,44 @@ var start = new Date().getTime();
                     // Get the CSL style as a serialized string of XML
                     var xhr = new XMLHttpRequest();
                     
-                    xhr.open('GET', styleID + '.csl', false);
+                    xhr.open('GET', 'csl-styles/' + styleID + '.csl', false);
                     xhr.send(null);
                     var styleAsText = xhr.responseText;
 
                     var citeproc = new CSL.Engine(citeprocSys, styleAsText);
 
                     var itemIDs = [];
+                    var citationsSet = {};
                     for (var key in citations) {
                         itemIDs.push(key);
+                        citationsSet[key] = true;                  
                     }
+                    
                     citeproc.updateItems(itemIDs);
-                    var bibResult = citeproc.makeBibliography();                
-
+                    var bibResult = citeproc.makeBibliography();  
+                    
                     var res = bibResult[1].join('\n');                
-                    bibDiv.innerHTML = res;
+                    bibDiv.innerHTML = res;                    
+
+                    var citekeys = document.body.innerHTML.match(/\\cite{([^}]*)}/g);
+                    for (var k in citekeys)
+                    {                        
+                        var citekey = citekeys[k].substring(6, citekeys[k].length - 1);
+                        if (citationsSet[citekey])
+                        {
+                            var replacement = citeproc.makeCitationCluster([{"id": citekey }]);     
+                            console.log(replacement);
+                            var replacement_inner = replacement.substring(1, replacement.length - 1);
+                            //document.body.innerHTML = document.body.innerHTML.replace(replacement_inner, '<span class="citation_key" id="cite_'+citekey+'">' + replacement_inner + '</span>');
+                            document.body.innerHTML = document.body.innerHTML.replace("\\cite{" + citekey + "}", '<a href="#cite_' + citekey + '">' + replacement + '</a>');
+                        }                        
+                    }
+
+                    /*
+                    for (var key in citations) {
+                        document.body.innerHTML = document.body.innerHTML.replace("\\cite{" + key + "}", "Yow");
+                    }
+                    */
 
                     callback();
                 }
@@ -126,19 +149,35 @@ var start = new Date().getTime();
 
     var parseCitations = function()
     {
-        loadScript('zotero-bibtex-parse.js', function() {
+        loadScript('bower_components/zotero-bibtex-parse/zotero-bibtex-parse.js', function() {
             var scripts = document.getElementsByTagName("script");
             var bibTexTags = [];
             for (var i = 0, n = scripts.length; i < n; i++) {
-                if (scripts[i].getAttribute("type") == "application/bibtex") {        
-                    bibTexTags.push(scripts[i]);
+                if (scripts[i].getAttribute("type") == "application/bibtex") {
+
+                    // check src tag
+                    if (scripts[i].getAttribute("src"))
+                    {
+                        var src = scripts[i].getAttribute("src");
+
+                        // Get the CSL style as a serialized string of XML
+                        var xhr = new XMLHttpRequest();                        
+                        xhr.open('GET', src, false);
+                        xhr.send(null);
+                        var response = xhr.responseText;                        
+                        bibTexTags.push(response);
+                    } 
+                    else
+                    {
+                        bibTexTags.push(scripts[i].innerText);
+                    }
                     
                     target = scripts[i].getAttribute("data-target");
                 }
             }    
-            var bibtex = bibTexTags[0].innerText;    
+            var bibtex = bibTexTags[0];            
             var sample = bibtexParse.toJSON(bibtex);
-
+            console.log(bibtex);
             citations = toCiteJSON(sample);        
         });        
     };
